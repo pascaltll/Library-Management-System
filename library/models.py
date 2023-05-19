@@ -1,53 +1,39 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
 
-class Admins(models.Model):
+class BaseModel(models.Model):
+    class Meta:
+        managed = False
+
+
+class Admins(BaseModel):
     id = models.ForeignKey('Users', models.DO_NOTHING, db_column='id', primary_key=True)
     salary = models.FloatField()
     age = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'admins'
+    db_table = 'admins'
 
 
-class AuthGroup(models.Model):
+class AuthGroup(BaseModel):
     name = models.CharField(unique=True, max_length=80)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group'
+    db_table = 'auth_group'
 
 
-class AuthGroupPermissions(models.Model):
+class AuthGroupPermissions(BaseModel):
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
     permission = models.ForeignKey('AuthPermission', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_group_permissions'
-        unique_together = (('group', 'permission'),)
+    db_table = 'auth_group_permissions'
+    unique_together = (('group', 'permission'),)
 
 
-class AuthPermission(models.Model):
+class AuthPermission(BaseModel):
     name = models.CharField(max_length=255)
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING)
     codename = models.CharField(max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_permission'
-        unique_together = (('content_type', 'codename'),)
+    db_table = 'auth_permission'
+    unique_together = (('content_type', 'codename'),)
 
 
-class AuthUser(models.Model):
+class AuthUser(BaseModel):
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.IntegerField()
@@ -58,44 +44,30 @@ class AuthUser(models.Model):
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
     date_joined = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user'
+    db_table = 'auth_user'
 
 
-class AuthUserGroups(models.Model):
+class AuthUserGroups(BaseModel):
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_groups'
-        unique_together = (('user', 'group'),)
+    db_table = 'auth_user_groups'
+    unique_together = (('user', 'group'),)
 
 
-class AuthUserUserPermissions(models.Model):
+class AuthUserUserPermissions(BaseModel):
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
     permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'auth_user_user_permissions'
-        unique_together = (('user', 'permission'),)
+    db_table = 'auth_user_user_permissions'
+    unique_together = (('user', 'permission'),)
 
 
-class Books(models.Model):
+class Books(BaseModel):
     isbn = models.CharField(primary_key=True, max_length=50)
     title = models.CharField(max_length=50)
     authors = models.CharField(max_length=50)
     publisher = models.CharField(max_length=50)
     price = models.FloatField()
-
-    class Meta:
-        managed = False
-        db_table = 'books'
-
-
+    db_table = 'books'
 class CmdbUserinfo(models.Model):
     email = models.CharField(max_length=32)
     pwd = models.CharField(max_length=32)
@@ -125,11 +97,6 @@ class DjangoAdminLog(models.Model):
     change_message = models.TextField()
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
     user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'django_admin_log'
-
 
 class DjangoContentType(models.Model):
     app_label = models.CharField(max_length=100)
@@ -187,7 +154,7 @@ class Loans(models.Model):
     due_date = models.DateField()
     renewed = models.IntegerField()
     stono = models.ForeignKey('Storages', models.DO_NOTHING, db_column='stono')
-    id = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='id')
+    id = models.ForeignKey('AuthUser', models.DO_NOTHING, db_column='id')
     return_date = models.DateField(blank=True, null=True)
     admin_id = models.IntegerField(blank=True, null=True)
     loanno = models.AutoField(primary_key=True)
@@ -207,9 +174,9 @@ class Login(models.Model):
 
 
 class Reserves(models.Model):
-    lno = models.ForeignKey(Libraries, models.DO_NOTHING, db_column='lno')
+    lno = models.ForeignKey('Libraries', models.DO_NOTHING, db_column='lno')
     stono = models.ForeignKey('Storages', models.DO_NOTHING, db_column='stono')
-    id = models.ForeignKey(AuthUser, models.DO_NOTHING, db_column='id')
+    id = models.ForeignKey('AuthUser', models.DO_NOTHING, db_column='id')
     reno = models.AutoField(primary_key=True)
     admin_id = models.IntegerField(blank=True, null=True)
 
@@ -220,8 +187,8 @@ class Reserves(models.Model):
 
 class Storages(models.Model):
     stono = models.AutoField(primary_key=True)
-    isbn = models.ForeignKey(Books, models.DO_NOTHING, db_column='isbn')
-    lno = models.ForeignKey(Libraries, models.DO_NOTHING, db_column='lno')
+    isbn = models.ForeignKey('Books', models.DO_NOTHING, db_column='isbn')
+    lno = models.ForeignKey('Libraries', models.DO_NOTHING, db_column='lno')
 
     class Meta:
         managed = False
@@ -236,6 +203,6 @@ class Users(models.Model):
     join_date = models.DateField()
     is_admin = models.IntegerField()
 
-    class Meta:
+class Meta:
         managed = False
         db_table = 'users'
