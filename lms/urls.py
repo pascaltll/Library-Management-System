@@ -19,11 +19,7 @@ from library import views
 from django.conf.urls import url,include
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),
-
-    #path('', views.index),
-    #path('books/',views.books),
-
+ 
     url(r'^admin/', admin.site.urls, ),
     url(r'', include('library.urls', namespace='library')),
 ]
